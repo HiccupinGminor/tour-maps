@@ -1,0 +1,53 @@
+button {
+    padding: .5rem;
+    border-radius: 3px;
+}
+.clearfix {
+    overflow: hidden;
+}
+input[type=text] {
+    padding: .5rem;
+    width: 100%;
+}
+ul, li {
+    margin-left: 0;
+}
+li {
+    height: default;
+    line-height: default;
+}
+.available-stops {
+    background-color: #FAFAFA;
+    padding-top:1rem;
+    border:1px solid #DDD;
+    border-radius: 4px;
+}
+.first-container {
+    margin-top:2rem;
+}
+.container {
+    margin-top:1rem;
+    margin-bottom:1rem;
+}
+
+h1, h2, h3 {
+    font-weight: bold;
+}
+.map-frame {
+    border:2px solid #DDD;
+}
+.paper-effect {
+    margin-top:1rem;
+    padding:.75rem .75rem 0 .75rem;
+    border:1px solid #DDD;
+}
+.paper-effect li {
+    margin-bottom:.25em;
+}
+.toggle {
+    padding: 1rem;
+    font-size:1.5rem;
+}
+.steps-list {
+    margin-bottom: 2rem;
+}
