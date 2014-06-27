@@ -10,14 +10,6 @@
     <script type="text/javascript" src="js/libs/angular-sanitize.min.js"></script>
     <link rel="stylesheet" href="css/foundation.min.css">
     <link rel="stylesheet" href="css/custom.css">
-    <style>
-    #map-canvas {
-        height: 35%;
-        width:60%;
-        margin: 0 auto 0 auto;
-        padding: 0px
-    }
-    </style>
   </head>
   <body ng-app="ToursApp">
     <div class="first-container row">
@@ -31,17 +23,13 @@
           <input type="text" ng-model="newPlace.location" id="autoComplete" placeholder="Place">
         </div>
         <div class="small-12 large-5 columns">
-          <input type="text" ng-model="newPlace.name" placeholer="Short Name">
+          <input type="text" ng-model="newPlace.name" placeholder="Name Tag">
         </div>
         <div class="large-2 columns">
           <button ng-click="addPlace()">Add to List</button>
         </div>
-    <h3>Available Stops</h3>    
-        <ul class="available-stops">
-          <li ng-repeat="point in waypointList" class="clearfix"><div class="small-6 medium-3 large-3 columns">{{point.name}}</div><div class="small-6 medium-3 large-3 columns"><button ng-click="addWaypoint($index)">Add</button></div></li>
-        </ul>
-  
-        <div class="clearfix">
+    <h3>Available Stops</h3>
+        <div class="controls clearfix">
         <div class="small-6 large-4 columns">
           <input type="checkbox"  ng-model="useOptimized"> <label for="optimize">Optimize the Route</label>
         </div>
@@ -52,11 +40,16 @@
           <input type="radio" ng-model="transportMode" value="BICYCLING"> Bicycle
         </div>
         </div>
-  
-        <div class="paper-effect" ng-if="legs.length > 0">
+
+        <div class="small-12 medium-6 large-6 columns">
+          <ul class="available-stops">
+            <li ng-repeat="point in waypointList" ng-hide="waypoints.indexOf() > -1" class="clearfix"><div class="small-4 medium-4 large-4 columns">{{point.name}}</div><div class="small-2 medium-2 large-2 columns"><button ng-click="addWaypoint($index)">Add</button></div></li>
+          </ul>
+        </div>
+        <div class="paper-effect small-12 medium-6 large-6 columns" ng-if="legs.length > 0">
         <ol>
           <li ng-repeat="leg in legs">
-            <strong>{{ leg.start_address }}</strong> - <strong>{{leg.end_address }}</strong><br>
+            {{ leg.start_address }} <strong>-</strong> {{leg.end_address }}<br>
             Distance: {{ leg.distance.text }}<br>
             Duration: {{ leg.duration.text }}<br>
             <div ng-click="toggleShowSteps($index)" class="toggle"><span ng-if="leg.showSteps">[-]</span><span ng-if="!leg.showSteps">[+]</span></div>
@@ -71,6 +64,8 @@
           </li>
         </ol>
         </div>
+  
+  
       </div>
     </div>
     </div>
@@ -118,7 +113,7 @@
         {name:"Page Museum",location:"Page Museum 5801 Wilshire Blvd Los Angeles, CA 90036"},
         {name:"LACMA",location:"Los Angeles County Museum of Art 5905 Wilshire Blvd Los Angeles, CA 90036"},
         {name:"MOMA",location:"Museum of Contemporary Art 250 S Grand Ave Los Angeles, CA 90012"},
-        {name:"The Getty Museum",location:"The Getty 1200 Getty Center Dr Los Angeles, CA 90049"},
+        {name:"The Getty",location:"The Getty 1200 Getty Center Dr Los Angeles, CA 90049"},
       ];
 
       $scope.useOptimized = true;
@@ -128,8 +123,10 @@
 
       $scope.addPlace = function() {
 
-        $scope.waypointList.push({name: $scope.newPlace.name, location: $scope.newPlace.location});
-        console.log($scope.waypointList);
+        var hackLocation = document.getElementById("autoComplete").value;
+
+        $scope.waypointList.push({name: $scope.newPlace.name, location: hackLocation});
+
         $scope.newPlace = null;
 
       };

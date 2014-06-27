@@ -8,6 +8,7 @@ button {
 input[type=text] {
     padding: .5rem;
     width: 100%;
+    font-size:.75rem;
 }
 ul, li {
     margin-left: 0;
@@ -37,12 +38,11 @@ h1, h2, h3 {
     border:2px solid #DDD;
 }
 .paper-effect {
-    margin-top:1rem;
     padding:.75rem .75rem 0 .75rem;
     border:1px solid #DDD;
 }
 .paper-effect li {
-    margin-bottom:.25em;
+    margin-bottom:.75em;
 }
 .toggle {
     padding: 1rem;
@@ -50,4 +50,16 @@ h1, h2, h3 {
 }
 .steps-list {
     margin-bottom: 2rem;
+    border-bottom: 1px dotted #AAA;
+}
+#map-canvas {
+    height: 35%;
+    width:60%;
+    margin: 0 auto 0 auto;
+    padding: 0px
+}
+.controls {
+    padding-bottom:1rem;
+    border-bottom:1px solid #DDD;
+    margin-bottom:1rem;
 }
