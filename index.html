@@ -1,214 +1,81 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <title>Directions service</title>
-    <!--Load google search suggestion library-->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBb5tp9rL0Zk1Wj6P6T1JDilMQwc43ITPY"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.js"></script>
-    <script type="text/javascript" src="js/libs/angular-sanitize.min.js"></script>
+<head>
+<meta charset="utf-8">
+<title>EmberJS Tour Planner</title>
+    <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/foundation.min.css">
     <link rel="stylesheet" href="css/custom.css">
-  </head>
-  <body ng-app="ToursApp">
-    <div class="first-container row">
-      <h1>Sightseeing Planner</h1>
-    </div>
-    <div id="map-canvas"></div>      
-    <div class="container">
-    <div class="row">
-      <div ng-controller="MapCtrl">
-        <div class="small-12 large-5 columns">
-          <input type="text" ng-model="newPlace.location" id="autoComplete" placeholder="Place">
-        </div>
-        <div class="small-12 large-5 columns">
-          <input type="text" ng-model="newPlace.name" placeholder="Name Tag">
-        </div>
-        <div class="large-2 columns">
-          <button ng-click="addPlace()">Add to List</button>
-        </div>
-    <h3>Available Stops</h3>
-        <div class="controls clearfix">
-        <div class="small-6 large-4 columns">
-          <input type="checkbox"  ng-model="useOptimized"> <label for="optimize">Optimize the Route</label>
-        </div>
-        <div class="small-6 large-6 columns">
-          <input type="radio" ng-model="transportMode" value="DRIVING"> Drive
-          <!--<input type="radio" ng-model="transportMode" value="TRANSIT">Public Transportation-->
-          <input type="radio" ng-model="transportMode" value="WALKING"> Walk
-          <input type="radio" ng-model="transportMode" value="BICYCLING"> Bicycle
-        </div>
-        </div>
+</head>
+<body>
+    
+    <script type="text/x-handlebars" id="components/google-maps">
+        <div class="map-canvas">
+        </div>  
+    </script>
 
-        <div class="small-12 medium-6 large-6 columns">
-          <ul class="available-stops">
-            <li ng-repeat="point in waypointList" ng-hide="waypoints.indexOf() > -1" class="clearfix"><div class="small-4 medium-4 large-4 columns">{{point.name}}</div><div class="small-2 medium-2 large-2 columns"><button ng-click="addWaypoint($index)">Add</button></div></li>
-          </ul>
+    <script type="text/x-handlebars">
+        <div class="container">
+            {{outlet}}
         </div>
-        <div class="paper-effect small-12 medium-6 large-6 columns" ng-if="legs.length > 0">
-        <ol>
-          <li ng-repeat="leg in legs">
-            {{ leg.start_address }} <strong>-</strong> {{leg.end_address }}<br>
-            Distance: {{ leg.distance.text }}<br>
-            Duration: {{ leg.duration.text }}<br>
-            <div ng-click="toggleShowSteps($index)" class="toggle"><span ng-if="leg.showSteps">[-]</span><span ng-if="!leg.showSteps">[+]</span></div>
-            
-            <div ng-if="leg.showSteps" class="steps-list">
-              <ol>
-                <li ng-repeat="step in leg.steps">
-                  <div ng-bind-html="step.instructions"></div>
-                </li>
-              </ol>
+    </script>
+
+    <script type="text/x-handlebars" id="staff">
+        <div class="row">
+            <div class="large-12 small-12">
+                <h2>Suggest Destinations</h2>
             </div>
-          </li>
-        </ol>
+            <div class="small-6 large-6">
+                <input type="text" id="autoComplete" placeholder="Place">
+            </div>
         </div>
-  
-  
-      </div>
-    </div>
-    </div>
-    
+        <div class="row">
+            <div class="small-6 large-6">
+                <input type="text" placeholder="Name Tag">
+            </div>
+        </div>
 
-  </body>
+    </script>
 
-  <script>
-    var directionsRenderer;
-    var directionsService = new google.maps.DirectionsService();
-    var map;
-    var runtrizLatLong = new google.maps.LatLng(34.084873, -118.3284647);
-    var homeMarker;
+    <script type="text/x-handlebars" id="guest">
+        <div class="row">
+            <div class="large-12 small-12 columns">
+                <h1>Map Your Adventure</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="large-5 small-12 columns">
+                <div class="item-list">
+                    {{#each model}}
+                    <div class="button-item clearfix">
+                        <div class="small-10 large-10 medium-10 columns">
+                            {{name}}
+                        </div>
+                        <div class="small-2 large-2 medium-2 columns">
+                            {{#if added}}
+                            <span class="not-actionable">Added</span>
+                            {{else}}
+                            <button {{ action "addNode" this}}>Add</button>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
 
-    function initialize() {
-      directionsRenderer = new google.maps.DirectionsRenderer();
+                <input type="text" id="autoComplete" placeholder="Start typing to find another stop">
+            </div>
 
-      //Get location of runtriz
-      var runtrizOffice = runtrizLatLong;
+            <div class="large-7 small-12 columns">
+                {{ google-maps latitude="34.084873" longitude="-118.3284647" center=true zoom=15 }}
+            </div>
+        </div>
+    </script>
 
-      var mapOptions = {
-        zoom: 15,
-        center: runtrizOffice
-      }
-      map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBb5tp9rL0Zk1Wj6P6T1JDilMQwc43ITPY"></script>
+    <script src="js/libs/jquery-1.10.2.js"></script>
+    <script src="js/libs/handlebars-v1.3.0.js"></script>
+    <script src="js/libs/ember-1.7.0.js"></script>
+    <script src="js/app.js"></script>
 
-      // To add the marker to the map, use the 'map' property
-      homeMarker = new google.maps.Marker({
-          position: runtrizLatLong,
-          map: map,
-          title: "Runtriz Office"
-      });
-
-      directionsRenderer.setMap(map);
-    }
-
-    function removeHomeMarker()
-    {
-      homeMarker.setMap(null);
-    }
-    
-    var MapCtrl = function($scope){
-      
-      $scope.waypointList = [
-        {name:"Page Museum",location:"Page Museum 5801 Wilshire Blvd Los Angeles, CA 90036"},
-        {name:"LACMA",location:"Los Angeles County Museum of Art 5905 Wilshire Blvd Los Angeles, CA 90036"},
-        {name:"MOMA",location:"Museum of Contemporary Art 250 S Grand Ave Los Angeles, CA 90012"},
-        {name:"The Getty",location:"The Getty 1200 Getty Center Dr Los Angeles, CA 90049"},
-      ];
-
-      $scope.useOptimized = true;
-      $scope.waypoints = [];
-      $scope.legs = [];
-      // $scope.transportMode = $scope.transportMode || 'WALKING';
-
-      $scope.addPlace = function() {
-
-        var hackLocation = document.getElementById("autoComplete").value;
-
-        $scope.waypointList.push({name: $scope.newPlace.name, location: hackLocation});
-
-        $scope.newPlace = null;
-
-      };
-
-      $scope.addWaypoint = function($index) {
-        
-        var point = $scope.waypointList[$index];
-
-        $scope.waypoints.push({location: point.location, stopover: true});
-
-        $scope.calcRoute();
-
-        console.log($scope.legs);
-      };
-
-      $scope.calcRoute = function() {
-
-        removeHomeMarker();
-
-        var start = "742 N Cahuenga Blvd, Los Angeles, CA";
-        var end = start;
-        var optimize = $scope.useOptimized;
-        var legs;
-
-        if(typeof $scope.transportMode == "undefined")
-        {
-          $scope.transportMode = "DRIVING";
-        }
-
-        var request = {
-          origin:start,
-          destination:end,
-          waypoints: $scope.waypoints,
-          travelMode: google.maps.TravelMode[$scope.transportMode],
-          optimizeWaypoints: optimize,
-        };
-
-        directionsService.route(request, function(response, status) {
-          if (status == google.maps.DirectionsStatus.OK) {
-            directionsRenderer.setDirections(response);
-            
-            legs = response.routes[0].legs;
-
-            $scope.addLegs(legs);
-          }
-        });
-      }
-
-      $scope.toggleShowSteps = function($index){
-
-        var leg = $scope.legs[$index];
-
-        if(leg.showSteps !== true)
-        {
-          return leg.showSteps = true;
-        }
-        return leg.showSteps = false;
-        // $scope.legs[$index].showSteps = false;
-      };
-
-      $scope.addLegs = function(legs){
-
-        legs.forEach(function(value, index, array){
-          $scope.legs.push(legs[index]);
-        });
-
-        $scope.$apply();
-      }
-
-    };
-
-    var ToursApp = angular.module('ToursApp', ['ngSanitize']).controller('MapCtrl', MapCtrl);
-
-    //Generate autocomplete field
-    var options = {
-        types: [],
-        componentRestrictions: {}
-    };
-    var inputField = new google.maps.places.Autocomplete(document.getElementById('autoComplete'), options);
-
-    google.maps.event.addDomListener(window, 'load', initialize);
-
-  </script>
+</body>
 </html>
-

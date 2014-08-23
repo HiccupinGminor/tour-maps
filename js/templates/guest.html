@@ -1,0 +1,33 @@
+<script type="text/x-handlebars" id="guest">
+    <div class="row">
+        <div class="large-12 small-12 columns">
+            <h1>Plan Your Adventure</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="large-5 small-12 columns">
+            <div class="item-list">
+                {{#each model}}
+                <div class="button-item clearfix">
+                    <div class="small-10 large-10 medium-10 columns">
+                        {{name}}
+                    </div>
+                    <div class="small-2 large-2 medium-2 columns">
+                        {{#if added}}
+                        <span class="not-actionable">Added</span>
+                        {{else}}
+                        <button {{ action "addNode" this}}>Add</button>
+                        {{/if}}
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+
+            <input type="text" id="autoComplete" placeholder="Start typing to find another stop">
+        </div>
+
+        <div class="large-7 small-12 columns">
+            {{ google-maps latitude="34.084873" longitude="-118.3284647" center=true zoom=15 }}
+        </div>
+    </div>
+</script>
