@@ -15,6 +15,11 @@
     </script>
 
     <script type="text/x-handlebars">
+        <div class="row">
+            <div class="large-12 small-12 columns">
+                <h1>Map Your Adventure</h1>
+            </div>
+        </div>
         <div class="container">
             {{outlet}}
         </div>
@@ -36,13 +41,8 @@
         </div>
 
     </script>
-
+    
     <script type="text/x-handlebars" id="guest">
-        <div class="row">
-            <div class="large-12 small-12 columns">
-                <h1>Map Your Adventure</h1>
-            </div>
-        </div>
         <div class="row">
             <div class="large-5 small-12 columns">
                 <div class="item-list">
@@ -62,15 +62,46 @@
                     {{/each}}
                 </div>
 
-                <input type="text" id="autoComplete" placeholder="Start typing to find another stop">
+                <div class="button-bar nostyle">
+                    <ul class="button-group radius round">
+                        <li><button class="tiny button">Biking</button></li>
+                        <li><button class="tiny button">Walking</button></li>
+                        <li><button class="tiny button">Driving</button></li>
+                        <li><button class="tiny button">Transit</button></li>
+                    </ul>
+                </div>
+
+                <form>
+
+                {{input type="text" id="autoComplete" placeholder="Start typing to find another stop" value=newPlaceLocation}}
+                {{input type="text" placeholder="Add a name tag" value=newPlaceTag}}
+                <button {{ action "createPlace"}} > Create a new Place </button>
+                </form>
             </div>
 
             <div class="large-7 small-12 columns">
                 {{ google-maps latitude="34.084873" longitude="-118.3284647" center=true zoom=15 }}
             </div>
         </div>
+
     </script>
 
+    <script type="text/x-handlebars" id="directions">
+
+        <div class="row">
+            {{#each model}}
+                {{#if directions}}
+                    {{#each route in directions.routes}}
+                        {{#each leg in route.legs}}
+                            Distance: {{leg.distance.text}} - Duration: {{leg.duration.text}} <br>
+                            Start: {{leg.start_address}} TO End: {{leg.end_address}}
+                        {{/each}}
+                    {{/each}}
+                {{/if}}
+            {{/each}}
+        </div>
+    </script>
+    
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBb5tp9rL0Zk1Wj6P6T1JDilMQwc43ITPY"></script>
     <script src="js/libs/jquery-1.10.2.js"></script>
     <script src="js/libs/handlebars-v1.3.0.js"></script>

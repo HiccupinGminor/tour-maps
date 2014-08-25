@@ -1,6 +1,10 @@
 button {
     padding: .5rem;
     border-radius: 3px;
+    border-bottom: 1px solid ;
+}
+form input {
+    margin-bottom:.5rem;
 }
 .clearfix {
     overflow: hidden;
@@ -88,4 +92,11 @@ ul.nostyle {
 }
 .item-list {
     margin-bottom:1rem;
+}
+.button-bar li{
+    float:left;
+    margin-right:1px;
+}
+.button-group button{
+    padding:.1rem;
 }
